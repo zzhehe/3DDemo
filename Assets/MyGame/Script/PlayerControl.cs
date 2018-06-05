@@ -47,10 +47,19 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
 
         lastHorizontal = 0;
 
+
+        IdleState idleState = new IdleState();
+        idleState.onEnterMethod += OnEnterIdleState;
+        idleState.onUpdateMethod += OnUpDateIdleState;
+        idleState.onFixedUpdateMethod += OnFixedUpDateIdleState;
+        RunState runState = new RunState();
+        runState.onEnterMethod += OnEnterRunState;
+        runState.onUpdateMethod += OnUpDateRunState;
+        runState.onFixedUpdateMethod += OnFixedUpDateRunState;
         fsmSystem = new FsmSystem();
         fsmSystem.gameObject = this;
-        fsmSystem.AddState(new IdleState());
-        fsmSystem.AddState(new RunState());
+        fsmSystem.AddState(idleState);
+        fsmSystem.AddState(runState);
 
         fsmSystem.ChangeState(StateType.FSM_IDLE);
     }

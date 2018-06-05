@@ -8,10 +8,11 @@ public interface IStateBase
     bool IsCanChange { get; set; }
     //枚举状态
     StateType stateType { get; }
-    void OnEnter(IStateChangeable stateChangeable);
-    void OnUpdate(IStateChangeable stateChangeable);
-    void OnFixedUpdate(IStateChangeable stateChangeable);
-    void OnExit(IStateChangeable stateChangeable);
+    void OnEnter();
+    void OnUpdate();
+    void OnFixedUpdate();
+    void OnExit();
+    
 }
 
 //状态之间的切换工作
@@ -46,60 +47,104 @@ public class IdleState : IStateBase
 
     public StateType stateType { get { return StateType.FSM_IDLE; } }
 
-    public void OnEnter(IStateChangeable stateChangeable)
+    //public onEnterEvent onEnterMethod { get; private set; }
+    public delegate void onEnterEvent();
+    public event onEnterEvent onEnterMethod;
+    public delegate void onUpdateEvent();
+    public onEnterEvent onUpdateMethod;
+    public delegate void onExitEvent();
+    public onEnterEvent onExitMethod;
+    public delegate void onFixedUpdateEvent();
+    public onEnterEvent onFixedUpdateMethod;
+
+    public void OnEnter()
     {
-        stateChangeable.OnEnterIdleState();
+        if (onEnterMethod != null)
+        {
+            onEnterMethod();
+        }
     }
 
-    public void OnUpdate(IStateChangeable stateChangeable)
+    public void OnUpdate()
     {
-        stateChangeable.OnUpDateIdleState();
+        if (onUpdateMethod != null)
+        {
+            onUpdateMethod();
+        }
     }
 
-    public void OnExit(IStateChangeable stateChangeable)
+    public void OnExit()
     {
-        stateChangeable.OnExitIdleState();
+        if (onExitMethod != null)
+        {
+            onExitMethod();
+        }
     }
 
-    public void OnFixedUpdate(IStateChangeable stateChangeable)
+    public void OnFixedUpdate()
     {
-        stateChangeable.OnFixedUpDateIdleState();
+        if (onFixedUpdateMethod != null)
+        {
+            onFixedUpdateMethod();
+        }
     }
 }
 
 public class RunState : IStateBase
 {
+
+    List<IStateChangeable> stateMethodlist = new List<IStateChangeable>();
+
     public bool IsCanChange { get; set; }
 
     public StateType stateType { get { return StateType.FSM_RUN; } }
 
-    public void OnEnter(IStateChangeable stateChangeable)
+    public delegate void onEnterEvent();
+    public onEnterEvent onEnterMethod;
+    public delegate void onUpdateEvent();
+    public onEnterEvent onUpdateMethod;
+    public delegate void onExitEvent();
+    public onEnterEvent onExitMethod;
+    public delegate void onFixedUpdateEvent();
+    public onEnterEvent onFixedUpdateMethod;
+
+    public void OnEnter()
     {
-        stateChangeable.OnEnterRunState();
+        if (onEnterMethod != null)
+        {
+            onEnterMethod();
+        }
     }
 
-    public void OnUpdate(IStateChangeable stateChangeable)
+    public void OnUpdate()
     {
-        stateChangeable.OnUpDateRunState();
+        if (onUpdateMethod != null)
+        {
+            onUpdateMethod();
+        }
     }
 
-    public void OnExit(IStateChangeable stateChangeable)
+    public void OnExit()
     {
-        stateChangeable.OnExitRunState();
+        if (onExitMethod != null)
+        {
+            onExitMethod();
+        }
     }
 
-    public void OnFixedUpdate(IStateChangeable stateChangeable)
+    public void OnFixedUpdate()
     {
-        stateChangeable.OnFixedUpDateRunState();
+        if (onFixedUpdateMethod != null)
+        {
+            onFixedUpdateMethod();
+        }
     }
-
 }
 
 public class FsmSystem
 {
-    List<IStateChangeable> stateMethodlist = new List<IStateChangeable>();
     List<IStateBase> statesList = new List<IStateBase>();
-
+    
     public IStateBase currentState = null;
 
     public IStateChangeable gameObject;
@@ -132,14 +177,14 @@ public class FsmSystem
             {
                 if (currentState != null && currentState.IsCanChange)
                 {
-                    currentState.OnExit(gameObject);
+                    currentState.OnExit();
                     currentState = item;
-                    currentState.OnEnter(gameObject);
+                    currentState.OnEnter();
                 }
                 else if (currentState == null)
                 {
                     currentState = item;
-                    currentState.OnEnter(gameObject);
+                    currentState.OnEnter();
                 }
             }
         }
@@ -147,12 +192,12 @@ public class FsmSystem
 
     public void UpdateState()
     {
-        currentState.OnUpdate(gameObject);
+        currentState.OnUpdate();
     }
 
     public void FixedUpdateState()
     {
-        currentState.OnFixedUpdate(gameObject);
+        currentState.OnFixedUpdate();
     }
 
 }

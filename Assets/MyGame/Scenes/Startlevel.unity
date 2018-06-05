@@ -909,7 +909,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f6ddb7c276adbe04bb30a1f06614c341, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
@@ -3149,7 +3149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c09d074058ee4448b2e9f64c38ccae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunSpeed: 2000
+  RunSpeed: 50
   backSpeed: 1000
   rotateSpeed: 1
   turnSpeed: 5
