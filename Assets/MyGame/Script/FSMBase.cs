@@ -36,7 +36,8 @@ public enum StateType
     FSM_RUN,
     FSM_DEAD,
     FSM_WALK,
-    FSM_ADMOVE
+    FSM_ADMOVE,
+    FSM_JUMP
 }
 
 public class IdleState : IStateBase
