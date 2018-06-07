@@ -15,20 +15,6 @@ public interface IStateBase
     
 }
 
-//状态之间的切换工作
-public interface IStateChangeable
-{
-    void OnUpDateIdleState();
-    void OnFixedUpDateIdleState();
-    void OnEnterIdleState();
-    void OnExitIdleState();
-
-    void OnUpDateRunState();
-    void OnFixedUpDateRunState();
-    void OnEnterRunState();
-    void OnExitRunState();
-}
-
 
 public enum StateType
 {
@@ -93,9 +79,7 @@ public class IdleState : IStateBase
 
 public class RunState : IStateBase
 {
-
-    List<IStateChangeable> stateMethodlist = new List<IStateChangeable>();
-
+    
     public bool IsCanChange { get; set; }
 
     public StateType stateType { get { return StateType.FSM_RUN; } }
@@ -147,8 +131,6 @@ public class FsmSystem
     List<IStateBase> statesList = new List<IStateBase>();
     
     public IStateBase currentState = null;
-
-    public IStateChangeable gameObject;
 
     public void AddState(IStateBase state)
     {

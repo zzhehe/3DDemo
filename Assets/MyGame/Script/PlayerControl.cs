@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControl : MonoBehaviour, IStateChangeable
+public class PlayerControl : MonoBehaviour
 {
     //奔跑速度
     public float RunSpeed = 5.0f;
@@ -27,7 +28,7 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
 
     static int idleState = Animator.StringToHash("Base Layer.Idle");
     static int locoState = Animator.StringToHash("Base Layer.Locomotion");
-    static int backState = Animator.StringToHash("Base Layer.Back");
+    static int jumpState = Animator.StringToHash("Base Layer.Jump");
     static int restState = Animator.StringToHash("Base Layer.Rest");
     //现在的动画状态
     private AnimatorStateInfo currentBaseState;
@@ -49,18 +50,16 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
 
 
         IdleState idleState = new IdleState();
-        idleState.onEnterMethod += OnEnterIdleState;
         idleState.onUpdateMethod += OnUpDateIdleState;
-        idleState.onFixedUpdateMethod += OnFixedUpDateIdleState;
         RunState runState = new RunState();
-        runState.onEnterMethod += OnEnterRunState;
-        runState.onUpdateMethod += OnUpDateRunState;
         runState.onFixedUpdateMethod += OnFixedUpDateRunState;
+        JumpState jumpState = new JumpState();
+        jumpState.onUpdateMethod += OnUpDateJumpState;
+        jumpState.onEnterMethod += OnEnterJumpState;
         fsmSystem = new FsmSystem();
-        fsmSystem.gameObject = this;
         fsmSystem.AddState(idleState);
         fsmSystem.AddState(runState);
-
+        fsmSystem.AddState(jumpState);
         fsmSystem.ChangeState(StateType.FSM_IDLE);
     }
 
@@ -74,24 +73,10 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
     {
         fsmSystem.FixedUpdateState();
     }
-    //在屏幕中间画一个点
-    //void OnGUI()
-    //{
-    //    float mag = cam.getCurrentPivotMagnitude(aimPivotOffset);
-    //    if (mag < 0.05f)
-    //        GUI.DrawTexture(new Rect(Screen.width / 2 - (crosshair.width * 0.5f),
-    //                                 Screen.height / 2 - (crosshair.height * 0.5f),
-    //                                 crosshair.width, crosshair.height), crosshair);
-    //}
-
-    //旋转人物方向
-
-
-
+    
 
     public void OnUpDateIdleState()
     {
-
         Debug.Log("Idle状态正在更新");
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
@@ -101,33 +86,15 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
             fsmSystem.currentState.IsCanChange = true;
             fsmSystem.ChangeState(StateType.FSM_RUN);
         }
-    }
 
-    public void OnFixedUpDateIdleState()
-    {
 
-        Debug.Log("IdleFix状态正在更新");
+        if (Input.GetKey(KeyCode.Space))
+        {
+            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_JUMP);
+        }
     }
-
-    public void OnLatedUpDateIdleState()
-    {
-        Debug.Log("IdleLated状态正在更新");
-    }
-
-    public void OnEnterIdleState()
-    {
-        Debug.Log("进入Idle状态");
-    }
-
-    public void OnExitIdleState()
-    {
-        Debug.Log("退出Idle状态");
-    }
-
-    public void OnUpDateRunState()
-    {
-        Debug.Log("Run状态正在更新");
-    }
+    
 
     public void OnFixedUpDateRunState()
     {
@@ -136,6 +103,7 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
         anim.SetFloat("Speed", v);
         h = Mathf.Lerp(lastHorizontal, h, Time.deltaTime * turnSpeed);//插值使动画过度平缓
         anim.SetFloat("Direction", h);
+        anim.Play("Locomotion");
         lastHorizontal = h;
 
         if (Mathf.Abs(h) < 0.01 && Mathf.Abs(v) < 0.01)
@@ -160,12 +128,18 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
 
         // 人物前后移动
         //transform.localPosition += velocity * Time.deltaTime;
-        rbody.AddForce(velocity * RunSpeed, ForceMode.Force);
+        rbody.AddForce(velocity, ForceMode.Force);
 
         //左右旋转用摄像头控制，总是转向屏幕中间位置
         Rotating(h, v);
 
         Debug.Log("Run状态正在更新");
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_JUMP);
+        }
     }
 
     Vector3 Rotating(float horizontal, float vertical)
@@ -226,20 +200,20 @@ public class PlayerControl : MonoBehaviour, IStateChangeable
         }
     }
 
-
-    public void OnLatedUpDateRunState()
+    private void OnEnterJumpState()
     {
-        Debug.Log("Run状态正在更新");
+        fsmSystem.currentState.IsCanChange = false;
+        anim.Play("Jump");
     }
 
-    public void OnEnterRunState()
+    private void OnUpDateJumpState()
     {
-        Debug.Log("进入Run状态");
-
+        currentBaseState=anim.GetCurrentAnimatorStateInfo(0);
+        if (currentBaseState.normalizedTime > 1)
+        {
+            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_IDLE);
+        }
     }
-
-    public void OnExitRunState()
-    {
-        Debug.Log("退出Run状态");
-    }
+    
 }
