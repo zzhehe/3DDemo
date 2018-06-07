@@ -2,17 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IStateBase
+public abstract class IStateBase
 {
     //能否改变状态
-    bool IsCanChange { get; set; }
-    //枚举状态
-    StateType stateType { get; }
-    void OnEnter();
-    void OnUpdate();
-    void OnFixedUpdate();
-    void OnExit();
-    
+    public bool IsCanChange { get; set; }
+
+    public StateType stateType { get; set; }
+
+    public virtual void OnEnter() { }
+
+    public virtual void OnExit() { }
+
+    public abstract void OnUpdate();
+
+    public abstract void OnFixedUpdate();
+
+    public abstract void TriggerEvent(FsmSystem fsmSystem, GameObject obj);
+
+
 }
 
 
@@ -24,106 +31,6 @@ public enum StateType
     FSM_WALK,
     FSM_ADMOVE,
     FSM_JUMP
-}
-
-public class IdleState : IStateBase
-{
-
-
-    public bool IsCanChange { get; set; }
-
-    public StateType stateType { get { return StateType.FSM_IDLE; } }
-
-    //public onEnterEvent onEnterMethod { get; private set; }
-    public delegate void onEnterEvent();
-    public event onEnterEvent onEnterMethod;
-    public delegate void onUpdateEvent();
-    public onEnterEvent onUpdateMethod;
-    public delegate void onExitEvent();
-    public onEnterEvent onExitMethod;
-    public delegate void onFixedUpdateEvent();
-    public onEnterEvent onFixedUpdateMethod;
-
-    public void OnEnter()
-    {
-        if (onEnterMethod != null)
-        {
-            onEnterMethod();
-        }
-    }
-
-    public void OnUpdate()
-    {
-        if (onUpdateMethod != null)
-        {
-            onUpdateMethod();
-        }
-    }
-
-    public void OnExit()
-    {
-        if (onExitMethod != null)
-        {
-            onExitMethod();
-        }
-    }
-
-    public void OnFixedUpdate()
-    {
-        if (onFixedUpdateMethod != null)
-        {
-            onFixedUpdateMethod();
-        }
-    }
-}
-
-public class RunState : IStateBase
-{
-    
-    public bool IsCanChange { get; set; }
-
-    public StateType stateType { get { return StateType.FSM_RUN; } }
-
-    public delegate void onEnterEvent();
-    public onEnterEvent onEnterMethod;
-    public delegate void onUpdateEvent();
-    public onEnterEvent onUpdateMethod;
-    public delegate void onExitEvent();
-    public onEnterEvent onExitMethod;
-    public delegate void onFixedUpdateEvent();
-    public onEnterEvent onFixedUpdateMethod;
-
-    public void OnEnter()
-    {
-        if (onEnterMethod != null)
-        {
-            onEnterMethod();
-        }
-    }
-
-    public void OnUpdate()
-    {
-        if (onUpdateMethod != null)
-        {
-            onUpdateMethod();
-        }
-    }
-
-    public void OnExit()
-    {
-        if (onExitMethod != null)
-        {
-            onExitMethod();
-        }
-    }
-
-    public void OnFixedUpdate()
-    {
-        if (onFixedUpdateMethod != null)
-        {
-            onFixedUpdateMethod();
-        }
-    }
 }
 
 public class FsmSystem

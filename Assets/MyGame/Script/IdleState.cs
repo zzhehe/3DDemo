@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpState : IStateBase
-{
-    public JumpState()
+public class IdleState : IStateBase {
+
+    public IdleState()
     {
-        stateType = StateType.FSM_JUMP;
+        stateType = StateType.FSM_IDLE;
     }
 
     public delegate void onEnterEvent();
@@ -18,7 +18,6 @@ public class JumpState : IStateBase
     public delegate void onFixedUpdateEvent();
     public onEnterEvent onFixedUpdateMethod;
     
-
     public override void OnEnter()
     {
         if (onEnterMethod != null)
@@ -34,7 +33,7 @@ public class JumpState : IStateBase
             onExitMethod();
         }
     }
-    
+
 
     public override void OnUpdate()
     {
@@ -54,12 +53,19 @@ public class JumpState : IStateBase
 
     public override void TriggerEvent(FsmSystem fsmSystem, GameObject gameObject)
     {
-        //现在的动画状态
-        AnimatorStateInfo currentBaseState = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-        if (currentBaseState.normalizedTime > 1)
+        Player player = gameObject.GetComponent<Player>();
+
+        if (Mathf.Abs(player.h) > 0 || Mathf.Abs(player.v) > 0)
         {
             fsmSystem.currentState.IsCanChange = true;
-            fsmSystem.ChangeState(StateType.FSM_IDLE);
+            fsmSystem.ChangeState(StateType.FSM_RUN);
+        }
+
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_JUMP);
         }
     }
 }

@@ -111,53 +111,53 @@ public class TPFcamera : MonoBehaviour {
         float width = height * aspect;
 
         Vector3 downPoint = noCollisionOffset + new Vector3(0, -height, camDistance);
-        for (float zOffset = noCollisionOffset.z; zOffset <= 0; zOffset += 0.01f)
+        for (float zOffset = noCollisionOffset.z; zOffset <= 1f; zOffset += 0.02f)
         {
-            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * downPoint, Mathf.Abs(zOffset)) || zOffset == 0)
+            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * downPoint, Mathf.Abs(zOffset)) || zOffset == 1f)
             {
                 break;
             }
-            noCollisionOffset.z = zOffset - 0.2f;
-            downPoint.z = zOffset - 0.2f;
+            noCollisionOffset.z = zOffset;
+            downPoint.z = zOffset;
         }
 
         Vector3 upPoint = noCollisionOffset + new Vector3(0, height, camDistance);
-        for (float zOffset = noCollisionOffset.z; zOffset <= 0; zOffset += 0.01f)
+        for (float zOffset = noCollisionOffset.z; zOffset <= 1f; zOffset += 0.02f)
         {
-            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * upPoint, Mathf.Abs(zOffset)) || zOffset == 0)
+            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * upPoint, Mathf.Abs(zOffset)) || zOffset == 1f)
             {
                 break;
             }
-            noCollisionOffset.z = zOffset - 0.2f;
-            upPoint.z = zOffset - 0.2f;
+            noCollisionOffset.z = zOffset;
+            upPoint.z = zOffset;
         }
         
         Vector3 rightPoint = noCollisionOffset + new Vector3(width, 0, camDistance);
-        for (float zOffset = noCollisionOffset.z; zOffset <= 0; zOffset += 0.01f)
+        for (float zOffset = noCollisionOffset.z; zOffset <= 1f; zOffset += 0.02f)
         {
-            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * rightPoint, Mathf.Abs(zOffset)) || zOffset == 0)
+            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * rightPoint, Mathf.Abs(zOffset)) || zOffset == 1f)
             {
                 break;
             }
-            noCollisionOffset.z = zOffset - 0.2f;
-            rightPoint.z = zOffset - 0.2f;
+            noCollisionOffset.z = zOffset;
+            rightPoint.z = zOffset;
         }
 
         Vector3 leftPoint = noCollisionOffset + new Vector3(-width, 0, camDistance);
-        for (float zOffset = noCollisionOffset.z; zOffset <= 0; zOffset += 0.01f)
+        for (float zOffset = noCollisionOffset.z; zOffset <= 1f; zOffset += 0.02f)
         {
-            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * leftPoint, Mathf.Abs(zOffset)) || zOffset == 0)
+            if (DoubleViewingPosCheck(baseTempPosition + aimRotation * leftPoint, Mathf.Abs(zOffset)) || zOffset == 1f)
             {
                 break;
             }
-            noCollisionOffset.z = zOffset - 0.2f;
-            leftPoint.z = zOffset - 0.2f;
+            noCollisionOffset.z = zOffset;
+            leftPoint.z = zOffset;
         }
 
         //for (float zOffset = targetCamOffset.z; zOffset <= 0; zOffset += 0.3f)
         //{
         //    noCollisionOffset.z = zOffset - 0.3f;
-        //    if (DoubleViewingPosCheck(baseTempPosition + aimRotation * noCollisionOffset, Mathf.Abs(zOffset)) || zOffset == 0.5f)
+        //    if (DoubleViewingPosCheck(baseTempPosition + aimRotation * noCollisionOffset, Mathf.Abs(zOffset)) || zOffset == 1f)
         //    {
         //        break;
         //    }
@@ -194,7 +194,8 @@ public class TPFcamera : MonoBehaviour {
     {
         //人物胶囊体的顶点高度
         float playerFocusHeight = player.GetComponent<CapsuleCollider>().height * 0.5f;
-        return ViewingPosCheck(checkPos, playerFocusHeight) && ReverseViewingPosCheck(checkPos, playerFocusHeight, Offset);
+
+        return ViewingPosCheck(checkPos, playerFocusHeight) && ReverseViewingPosCheck(checkPos, playerFocusHeight, Offset) && ViewingPosCheck(checkPos, 0) && ReverseViewingPosCheck(checkPos, 0, Offset);
     }
 
     bool ViewingPosCheck(Vector3 checkPos, float deltaPlayerHeight)
