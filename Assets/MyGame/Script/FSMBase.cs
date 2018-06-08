@@ -4,8 +4,6 @@ using UnityEngine;
 
 public abstract class IStateBase
 {
-    //能否改变状态
-    public bool IsCanChange { get; set; }
 
     public StateType stateType { get; set; }
 
@@ -36,7 +34,10 @@ public enum StateType
 public class FsmSystem
 {
     List<IStateBase> statesList = new List<IStateBase>();
-    
+
+    //能否改变状态
+    public bool IsCanChange { get; set; }
+
     public IStateBase currentState = null;
 
     public void AddState(IStateBase state)
@@ -65,7 +66,7 @@ public class FsmSystem
         {
             if (item.stateType == stateType)
             {
-                if (currentState != null && currentState.IsCanChange)
+                if (currentState != null && IsCanChange)
                 {
                     currentState.OnExit();
                     currentState = item;

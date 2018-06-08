@@ -44,7 +44,6 @@ public class PlayerControl : MonoBehaviour
     {
         player.OnEnterIdleState();
     }
-    
 
     public void OnFixedUpDateRunState()
     {
@@ -54,7 +53,7 @@ public class PlayerControl : MonoBehaviour
 
     private void OnEnterJumpState()
     {
-        fsmSystem.currentState.IsCanChange = false;
+        fsmSystem.IsCanChange = false;
         player.OnEnterJumpState();
     }
     

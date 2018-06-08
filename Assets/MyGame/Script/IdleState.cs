@@ -57,14 +57,14 @@ public class IdleState : IStateBase {
 
         if (Mathf.Abs(player.h) > 0 || Mathf.Abs(player.v) > 0)
         {
-            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.IsCanChange = true;
             fsmSystem.ChangeState(StateType.FSM_RUN);
         }
 
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.IsCanChange = true;
             fsmSystem.ChangeState(StateType.FSM_JUMP);
         }
     }

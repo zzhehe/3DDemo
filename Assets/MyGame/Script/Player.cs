@@ -33,12 +33,16 @@ public class Player : MonoBehaviour {
     public GameObject cam;
     private Animator anim;
 
-    // Use this for initialization
-    void Start()
+    private void Awake()
     {
         cam = GameObject.FindWithTag("MainCamera");
         anim = GetComponent<Animator>();
         rbody = GetComponent<Rigidbody>();
+    }
+
+    // Use this for initialization
+    void Start()
+    {
         lastHorizontal = 0;
     }
 
@@ -60,8 +64,7 @@ public class Player : MonoBehaviour {
         anim.SetFloat("Direction", h);
         anim.Play("Locomotion");
         lastHorizontal = h;
-
-
+        
         //z轴方向移动的方向向量
         velocity = new Vector3(0, 0, v);
         //从局部坐标转换到世界坐标
@@ -83,12 +86,11 @@ public class Player : MonoBehaviour {
 
     public void OnEnterIdleState()
     {
-        Debug.Log("Idle状态正在更新");
+        anim.SetBool("IsJump", false);
         anim.SetFloat("Speed", 0);
         anim.SetFloat("Direction", 0);
     }
     
-
     public Vector3 Rotating()
     {
 
@@ -150,7 +152,7 @@ public class Player : MonoBehaviour {
 
     public void OnEnterJumpState()
     {
-        anim.Play("Jump");
+        anim.SetBool("IsJump", true);
     }
     
 }

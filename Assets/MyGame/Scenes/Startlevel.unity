@@ -2710,14 +2710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c09d074058ee4448b2e9f64c38ccae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunSpeed: 30000
-  backSpeed: 5000
-  rotateSpeed: 1
-  turnSpeed: 5
-  turnSmoothing: 2
-  h: 0
-  v: 0
-  cam: {fileID: 1799050763}
 --- !u!136 &668747915
 CapsuleCollider:
   m_ObjectHideFlags: 0

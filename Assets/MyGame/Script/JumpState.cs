@@ -56,9 +56,9 @@ public class JumpState : IStateBase
     {
         //现在的动画状态
         AnimatorStateInfo currentBaseState = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-        if (currentBaseState.normalizedTime > 1)
+        if (currentBaseState.normalizedTime > 1 && currentBaseState.IsName("Jump"))
         {
-            fsmSystem.currentState.IsCanChange = true;
+            fsmSystem.IsCanChange = true;
             fsmSystem.ChangeState(StateType.FSM_IDLE);
         }
     }
