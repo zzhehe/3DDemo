@@ -26,9 +26,12 @@ public enum StateType
     FSM_IDLE,
     FSM_RUN,
     FSM_DEAD,
-    FSM_WALK,
+    FSM_ATTACKWALK,
     FSM_ADMOVE,
-    FSM_JUMP
+    FSM_JUMP,
+    FSM_ATTACKIDLE,
+    FSM_ATTACK,
+    FSM_DAMAGE
 }
 
 public class FsmSystem

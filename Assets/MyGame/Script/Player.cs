@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +33,10 @@ public class Player : MonoBehaviour {
     private Rigidbody rbody;
     public GameObject cam;
     private Animator anim;
+    public float targetAttackWeight;
+    private float curAttackWalkWeight;
+    private float curAttackWeight;
+    public bool IsInBattle;
 
     private void Awake()
     {
@@ -83,13 +88,6 @@ public class Player : MonoBehaviour {
         //transform.localPosition += velocity * Time.deltaTime;
         rbody.AddForce(velocity, ForceMode.Force);
     }
-
-    public void OnEnterIdleState()
-    {
-        anim.SetBool("IsJump", false);
-        anim.SetFloat("Speed", 0);
-        anim.SetFloat("Direction", 0);
-    }
     
     public Vector3 Rotating()
     {
@@ -133,6 +131,7 @@ public class Player : MonoBehaviour {
         return targetDirection;
     }
 
+
     public void SetLastDirection(Vector3 direction)
     {
         lastDirection = direction;
@@ -150,9 +149,104 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public void OnEnterRunState()
+    {
+        if (IsInBattle)
+        {
+            targetAttackWeight = 1.0f;
+            curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+            curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+        }
+        else
+        {
+            targetAttackWeight = 0f;
+            curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+            curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+        }
+    }
+
+    public void OnUpDateRunState()
+    {
+        Debug.Log("进入跑步状态");
+        if (IsInBattle)
+        {
+            curAttackWeight = Mathf.Lerp(curAttackWeight, 1 - targetAttackWeight, 0.1f);
+            curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, targetAttackWeight, 0.1f);
+            anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+            anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+        }
+        else
+        {
+            curAttackWeight = Mathf.Lerp(curAttackWeight, targetAttackWeight, 0.1f);
+            curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, targetAttackWeight, 0.1f);
+            anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+            anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+        }
+        
+    }
+
+    public void OnEnterIdleState()
+    {
+        Debug.Log("进入无战斗状态");
+        anim.SetBool("IsJump", false);
+        //anim.SetFloat("Speed", 0);
+        //anim.SetFloat("Direction", 0);
+        targetAttackWeight = 0f;
+        curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+        curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+    }
+
+    public void OnUpDateIdleState()
+    {
+        float curH = anim.GetFloat("Speed");
+        float curV = anim.GetFloat("Direction");
+        anim.SetFloat("Speed", Mathf.Lerp(curH, 0, 0.05f));
+        anim.SetFloat("Direction", Mathf.Lerp(curV, 0, 0.05f));
+
+        curAttackWeight = Mathf.Lerp(curAttackWeight, targetAttackWeight, 0.1f);
+        curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, targetAttackWeight, 0.1f);
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+        anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+    }
+
     public void OnEnterJumpState()
     {
         anim.SetBool("IsJump", true);
     }
-    
+
+    public void OnEnterAttackIdleState()
+    {
+        targetAttackWeight = 1.0f;
+        curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+        curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+        IsInBattle = true;
+    }
+
+    public void OnUpdateAttackIdleState()
+    {
+        Debug.Log("进入攻击准备状态");
+        curAttackWeight = Mathf.Lerp(curAttackWeight, targetAttackWeight, 0.1f);
+        curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, 1 - targetAttackWeight, 0.1f);
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+        anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+    }
+
+
+    public void OnEnterAttackWalkState()
+    {
+        Debug.Log("进入攻击跑步状态");
+        targetAttackWeight = 1.0f;
+        curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+        curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+    }
+
+
+
+    public void OnUpDateAttackWalkState()
+    {
+        curAttackWeight = Mathf.Lerp(curAttackWeight, 1 - targetAttackWeight, 0.1f);
+        curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, targetAttackWeight, 0.1f);
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+        anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+    }
 }

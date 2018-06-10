@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class RunState : IStateBase
+public class AttackWalkState : IStateBase
 {
 
-    public RunState()
+    public AttackWalkState()
     {
-        stateType = StateType.FSM_RUN;
+        stateType = StateType.FSM_ATTACKWALK;
     }
 
     public delegate void onEnterEvent();
@@ -20,6 +19,7 @@ public class RunState : IStateBase
     public delegate void onFixedUpdateEvent();
     public onEnterEvent onFixedUpdateMethod;
 
+
     public override void OnEnter()
     {
         if (onEnterMethod != null)
@@ -28,19 +28,20 @@ public class RunState : IStateBase
         }
     }
 
-    public override void OnUpdate()
-    {
-        if (onUpdateMethod != null)
-        {
-            onUpdateMethod();
-        }
-    }
-
     public override void OnExit()
     {
         if (onExitMethod != null)
         {
             onExitMethod();
+        }
+    }
+
+
+    public override void OnUpdate()
+    {
+        if (onUpdateMethod != null)
+        {
+            onUpdateMethod();
         }
     }
 
@@ -55,14 +56,9 @@ public class RunState : IStateBase
     public override void TriggerEvent(FsmSystem fsmSystem, GameObject gameObject)
     {
         Player player = gameObject.GetComponent<Player>();
+        
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            fsmSystem.IsCanChange = true;
-            fsmSystem.ChangeState(StateType.FSM_JUMP);
-        }
-
-        if (Mathf.Abs(player.h) == 0 && Mathf.Abs(player.v) == 0)
+        if (Mathf.Abs(player.h) < 0.1f && Mathf.Abs(player.v) < 0.1f)
         {
             fsmSystem.IsCanChange = true;
             if (player.IsInBattle)
@@ -74,7 +70,5 @@ public class RunState : IStateBase
                 fsmSystem.ChangeState(StateType.FSM_IDLE);
             }
         }
-
-
     }
 }
