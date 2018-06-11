@@ -55,7 +55,12 @@ public class AttackDoState : IStateBase {
     public override void TriggerEvent(FsmSystem fsmSystem, GameObject gameObject)
     {
         Player player = gameObject.GetComponent<Player>();
-        //如果离敌人距离过远
-        
+        //
+        AnimatorStateInfo currentBaseState = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1);
+        if (currentBaseState.normalizedTime > 1 && (currentBaseState.IsName("Jab") || currentBaseState.IsName("Jab 0")))
+        {
+            fsmSystem.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_ATTACKIDLE);
+        }
     }
 }

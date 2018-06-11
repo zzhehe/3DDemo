@@ -18,7 +18,7 @@ public class AttackIdleState : IStateBase {
     public onEnterEvent onExitMethod;
     public delegate void onFixedUpdateEvent();
     public onEnterEvent onFixedUpdateMethod;
-    private bool IsChanging;
+    private bool stateChanging;
 
     public override void OnEnter()
     {
@@ -56,7 +56,7 @@ public class AttackIdleState : IStateBase {
     public override void TriggerEvent(FsmSystem fsmSystem, GameObject gameObject)
     {
         Player player = gameObject.GetComponent<Player>();
-
+        AnimatorStateInfo currentBaseState = gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1);
         if (player.IsInBattle && Mathf.Abs(player.h) > 0.1f || Mathf.Abs(player.v) > 0.1f)
         {
             fsmSystem.IsCanChange = true;
@@ -71,23 +71,28 @@ public class AttackIdleState : IStateBase {
 
         if (Mathf.Abs(player.h) < 0.1f && Mathf.Abs(player.v) < 0.1f)
         {
+
             //如果离敌人距离过远
             if (true)
             {
-
-                //if (IsChanging)
-                //{
-                //    return;
-                //}
-                player.StartCoroutine(DelayToInvokeDo(() => {
-                    fsmSystem.IsCanChange = true;
-                    player.IsInBattle = false;
-                    IsChanging = false;
-                    fsmSystem.ChangeState(StateType.FSM_IDLE);
-                }, 2.0f));
-             //   IsChanging = true;
-
+                if (!stateChanging)
+                {
+                    player.StartCoroutine(DelayToInvokeDo(() => {
+                        fsmSystem.IsCanChange = true;
+                        player.IsInBattle = false;
+                        stateChanging = false;
+                        Debug.Log("进入攻击准备状态");
+                        fsmSystem.ChangeState(StateType.FSM_IDLE);
+                    }, 5.0f));
+                    stateChanging = true;
+                }
             }
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            fsmSystem.IsCanChange = true;
+            fsmSystem.ChangeState(StateType.FSM_ATTACK);
         }
     }
 

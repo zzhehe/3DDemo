@@ -32,18 +32,23 @@ public class PlayerControl : MonoBehaviour
         attackWalkState.onUpdateMethod += OnUpDateAttackWalkState;
         attackWalkState.onEnterMethod += OnEnterAttackWalkState;
 
+        AttackDoState attackDoState = new AttackDoState();
+        //attackDoState.onFixedUpdateMethod += OnFixedUpDateAttackWalkState;
+        attackDoState.onUpdateMethod += OnUpDateAttackDoState;
+        attackDoState.onEnterMethod += OnEnterAttackDoState;
+
         fsmSystem = new FsmSystem();
         fsmSystem.AddState(idleState);
         fsmSystem.AddState(runState);
         fsmSystem.AddState(jumpState);
         fsmSystem.AddState(AttackIdleState);
         fsmSystem.AddState(attackWalkState);
+        fsmSystem.AddState(attackDoState);
         fsmSystem.ChangeState(StateType.FSM_IDLE);
 
     }
 
-
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -121,4 +126,14 @@ public class PlayerControl : MonoBehaviour
         player.Rotating();
     }
 
+    private void OnUpDateAttackDoState()
+    {
+        player.OnUpDateAttackDoState();
+    }
+
+    private void OnEnterAttackDoState()
+    {
+        fsmSystem.IsCanChange = false;
+        player.OnEnterAttackDoState();
+    }
 }

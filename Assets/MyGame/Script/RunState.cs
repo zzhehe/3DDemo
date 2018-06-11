@@ -74,7 +74,14 @@ public class RunState : IStateBase
                 fsmSystem.ChangeState(StateType.FSM_IDLE);
             }
         }
-
+        if (Input.GetMouseButton(0))
+        {
+            if (player.IsInBattle)
+            {
+                fsmSystem.IsCanChange = true;
+                fsmSystem.ChangeState(StateType.FSM_ATTACK);
+            }
+        }
 
     }
 }

@@ -151,6 +151,7 @@ public class Player : MonoBehaviour {
 
     public void OnEnterRunState()
     {
+        Debug.Log("进入跑步状态");
         if (IsInBattle)
         {
             targetAttackWeight = 1.0f;
@@ -167,7 +168,6 @@ public class Player : MonoBehaviour {
 
     public void OnUpDateRunState()
     {
-        Debug.Log("进入跑步状态");
         if (IsInBattle)
         {
             curAttackWeight = Mathf.Lerp(curAttackWeight, 1 - targetAttackWeight, 0.1f);
@@ -211,11 +211,13 @@ public class Player : MonoBehaviour {
 
     public void OnEnterJumpState()
     {
+        Debug.Log("进入跳跃状态");
         anim.SetBool("IsJump", true);
     }
 
     public void OnEnterAttackIdleState()
     {
+        Debug.Log("进入攻击准备状态");
         targetAttackWeight = 1.0f;
         curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
         curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
@@ -224,7 +226,6 @@ public class Player : MonoBehaviour {
 
     public void OnUpdateAttackIdleState()
     {
-        Debug.Log("进入攻击准备状态");
         curAttackWeight = Mathf.Lerp(curAttackWeight, targetAttackWeight, 0.1f);
         curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, 1 - targetAttackWeight, 0.1f);
         anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
@@ -248,5 +249,28 @@ public class Player : MonoBehaviour {
         curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, targetAttackWeight, 0.1f);
         anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
         anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+    }
+
+    public void OnEnterAttackDoState()
+    {
+        Debug.Log("人物攻击了一下");
+        anim.SetTrigger("Attack");
+        targetAttackWeight = 1.0f;
+        curAttackWalkWeight = anim.GetLayerWeight(anim.GetLayerIndex("AttackWalk"));
+        curAttackWeight = anim.GetLayerWeight(anim.GetLayerIndex("Attack"));
+        IsInBattle = true;
+    }
+
+    public void OnUpDateAttackDoState()
+    {
+        curAttackWeight = Mathf.Lerp(curAttackWeight, targetAttackWeight, 0.1f);
+        curAttackWalkWeight = Mathf.Lerp(curAttackWalkWeight, 1 - targetAttackWeight, 0.1f);
+        anim.SetLayerWeight(anim.GetLayerIndex("Attack"), curAttackWeight);
+        anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
+        if (Input.GetMouseButtonDown(0))
+        {
+            anim.SetTrigger("Attack");
+        }
+        
     }
 }
