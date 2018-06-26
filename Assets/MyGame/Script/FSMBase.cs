@@ -31,7 +31,10 @@ public enum StateType
     FSM_JUMP,
     FSM_ATTACKIDLE,
     FSM_ATTACK,
-    FSM_DAMAGE
+    FSM_DAMAGE,
+    EnemyPatrol,
+    EnemyFollews,
+    EnemyAttack
 }
 
 public class FsmSystem
