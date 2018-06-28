@@ -105,6 +105,7 @@ public class BagPanel : MonoBehaviour {
 
     public void ShowItemsFromData(EItemType type)
     {
+        //数据库中所有的背包物品
         var list = BagManager.Instance.items;
         if (list == null)
         {
@@ -116,12 +117,8 @@ public class BagPanel : MonoBehaviour {
         }
 
         int itemCount = 0;
-        foreach (var item in list)
+        for (int i = 0; i < 30; i++)
         {
-            if (type != EItemType.EIT_Unknown && (int)type != item.type)
-            {
-                continue;
-            }
             //对象池中如果对象不够则生成对象,简单的对象池
             GameObject itemObj = null;
             if (itemCount < itemObjs.Count)
@@ -133,6 +130,7 @@ public class BagPanel : MonoBehaviour {
                 itemObj = CreateItemFromTemplate();
                 itemObjs.Add(itemObj);
             }
+            //上面把所有格子都置为id为-1的空格子
             //如果道具为空就不显示
             var bagItem = itemObj.GetComponentInChildren<BagItem>();
             itemObj.SetActive(true);
@@ -140,17 +138,20 @@ public class BagPanel : MonoBehaviour {
             {
                 itemObj.SetActive(false);
             }
-            bagItem.SetData(item);
+            //  bagItem.SetData(list[i]);
             //可以尝试在这儿加一个Button组件，然后用lambda表达式确定点击事件
             //也可以使用本示例的Event Trigger添加事件
 
             ++itemCount;
         }
+        
         //对象池中多余的对象置为false
-        for (; itemCount < itemObjs.Count; ++itemCount)
-        {
-            itemObjs[itemCount].SetActive(false);
-        }
+        //for (; itemCount < itemObjs.Count; ++itemCount)
+        //{
+        //    itemObjs[itemCount].SetActive(false);
+        //}//这里格子数量固定为30个
+
+        //吧list中的物品加入到itemObjs对象格子里
     }
 
     /// <summary>

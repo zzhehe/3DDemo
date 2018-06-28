@@ -36,6 +36,11 @@ public class ItemInfo{
     /// 道具类型
     /// </summary>
     public int type;
+
+    public ItemInfo()
+    {
+        id = -1;
+    }
 }
 
 public enum EItemOperation
