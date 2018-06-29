@@ -15,7 +15,7 @@ public class BagPanel : MonoBehaviour {
     //存储背包slot（对象池）
     public List<GameObject> slotsList;
     //存储背包slot对应的item信息
-    private List<ItemInfo> itemInfoList;
+    public List<ItemInfo> itemInfoList;
     //物品详细页面
     public ItemDetailPanel detailPanel;
 
@@ -133,6 +133,7 @@ public class BagPanel : MonoBehaviour {
             else
             {
                 itemObj = CreateItemFromTemplate();
+                itemObj.GetComponent<SlotDrop>().slotIndex = i;
                 slotsList.Add(itemObj);
                 itemInfoList.Add(new ItemInfo());
             }
