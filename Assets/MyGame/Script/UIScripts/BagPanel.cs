@@ -4,15 +4,18 @@ using UnityEngine;
 using DG.Tweening;
 
 public class BagPanel : MonoBehaviour {
-    
     //物品模板
+    public GameObject itemPanel;
+    //物品格子模板
     public GameObject itemTemp;
     //物品的父节点
     public Transform itemParent;
     
     
-    //存储背包显示中的相关的Item信息（对象池）
-    List<GameObject> itemObjs;
+    //存储背包slot（对象池）
+    public List<GameObject> slotsList;
+    //存储背包slot对应的item信息
+    private List<ItemInfo> itemInfoList;
     //物品详细页面
     public ItemDetailPanel detailPanel;
 
@@ -27,8 +30,7 @@ public class BagPanel : MonoBehaviour {
     //面板
     public RectTransform leftPanel;
     public RectTransform rightPanel;
-
-    List<GameObject> Slots = new List<GameObject>();
+    
 
     private void Awake()
     {
@@ -111,47 +113,71 @@ public class BagPanel : MonoBehaviour {
         {
             return;
         }
-        if (itemObjs == null)
+        if (slotsList == null)
         {
-            itemObjs = new List<GameObject>();
+            slotsList = new List<GameObject>();
         }
-
+        if (itemInfoList == null)
+        {
+            itemInfoList = new List<ItemInfo>();
+        }
         int itemCount = 0;
         for (int i = 0; i < 30; i++)
         {
             //对象池中如果对象不够则生成对象,简单的对象池
             GameObject itemObj = null;
-            if (itemCount < itemObjs.Count)
+            if (itemCount < slotsList.Count)
             {
-                itemObj = itemObjs[itemCount];
+                itemObj = slotsList[itemCount];
             }
             else
             {
                 itemObj = CreateItemFromTemplate();
-                itemObjs.Add(itemObj);
+                slotsList.Add(itemObj);
+                itemInfoList.Add(new ItemInfo());
             }
             //上面把所有格子都置为id为-1的空格子
             //如果道具为空就不显示
-            var bagItem = itemObj.GetComponentInChildren<BagItem>();
-            itemObj.SetActive(true);
-            if (bagItem == null)
-            {
-                itemObj.SetActive(false);
-            }
-            //  bagItem.SetData(list[i]);
+            //var bagItem = itemObj.GetComponentInChildren<BagItem>();
+            //itemObj.SetActive(true);
+            //if (bagItem == null)
+            //{
+            //    itemObj.SetActive(false);
+            //}
             //可以尝试在这儿加一个Button组件，然后用lambda表达式确定点击事件
             //也可以使用本示例的Event Trigger添加事件
 
             ++itemCount;
         }
-        
+
         //对象池中多余的对象置为false
-        //for (; itemCount < itemObjs.Count; ++itemCount)
+        //for (; itemCount < slotsList.Count; ++itemCount)
         //{
-        //    itemObjs[itemCount].SetActive(false);
+        //    slotsList[itemCount].SetActive(false);
         //}//这里格子数量固定为30个
 
-        //吧list中的物品加入到itemObjs对象格子里
+        //吧list中的物品加入到slotsList对象格子里
+        foreach (var item in list)
+        {
+            AddItemToSlot(item);
+        }
+
+    }
+
+    public void AddItemToSlot(ItemInfo itemInfo)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            if (itemInfoList[i].id == -1)
+            {
+                GameObject item = Instantiate(itemPanel, slotsList[i].transform);
+                BagItem bagItem = item.GetComponent<BagItem>();
+                bagItem.SetData(itemInfo);
+                bagItem.slotsIndex = i;
+                itemInfoList[i] = bagItem.itemInfo;
+                break;
+            }
+        }
     }
 
     /// <summary>
