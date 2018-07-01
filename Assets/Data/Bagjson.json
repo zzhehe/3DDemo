@@ -1,7 +1,7 @@
 ﻿[
-{"name":"item_001","description":"zheshi_001","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":100,"id":10001,"quality":0,"type":0},
-{"name":"item_002","description":"zheshi_002","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":101,"id":10002,"quality":1,"type":1},
-{"name":"item_003","description":"zheshi_003","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":102,"id":10003,"quality":2,"type":2},
+{"name":"item_001","description":"zheshi_001","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":1,"id":10001,"quality":0,"type":0},
+{"name":"item_001","description":"zheshi_002","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":1,"id":10002,"quality":1,"type":1},
+{"name":"item_001","description":"zheshi_003","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":1,"id":10003,"quality":2,"type":2},
 {"name":"item_004","description":"zheshi_004","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":103,"id":10004,"quality":0,"type":0},
 {"name":"item_005","description":"zheshi_005","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":104,"id":10005,"quality":1,"type":1},
 {"name":"item_006","description":"zheshi_006","icon":"UI/PNG/cursorSword_gold","bgIcon":"UI/PNG/panel_brown","count":105,"id":10006,"quality":2,"type":2},

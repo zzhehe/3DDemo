@@ -13,10 +13,6 @@ public class SlotDrop : MonoBehaviour, IDropHandler
         bagPanel = FindObjectOfType<BagPanel>();
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
     
 
     public void OnDrop(PointerEventData eventData)

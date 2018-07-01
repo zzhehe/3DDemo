@@ -45,7 +45,6 @@ public class BagItem : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("开始拖物品"+slotsIndex);
         if (itemInfo != null)
         {
             gameObject.transform.SetParent(gameObject.transform.parent.parent);
@@ -58,7 +57,6 @@ public class BagItem : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("正在拖物品"+slotsIndex);
         if (itemInfo != null)
         {
             gameObject.transform.position = eventData.position;
@@ -67,7 +65,6 @@ public class BagItem : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("拖物品结束"+slotsIndex);
         
         GameObject parent = bagPanel.slotsList[slotsIndex];
         gameObject.transform.SetParent(parent.transform);
@@ -84,17 +81,27 @@ public class BagItem : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
         
         if (bagItem != null && bagItem.slotsIndex != slotsIndex)
         {
-            int tempslotindex = slotsIndex;
-            //被换的物品信息
-            Transform beItem = transform;
-            slotsIndex = bagItem.slotsIndex;
-            //把被换的物品移动到原来拖动物品的父节点下
-            beItem.SetParent(bagPanel.slotsList[bagItem.slotsIndex].transform);
-            beItem.position = beItem.parent.position;
-            //交换两个物品的信息，拖动物品的位置在OnEndDrag函数中设置
-            bagPanel.itemInfoList[bagItem.slotsIndex] = itemInfo;
-            bagItem.slotsIndex = tempslotindex;
-            bagPanel.itemInfoList[tempslotindex] = bagItem.itemInfo;
+            if (bagItem.itemInfo.name == this.itemInfo.name)
+            {
+                this.itemInfo.count += bagItem.itemInfo.count;
+                SetData(this.itemInfo);
+                bagPanel.itemInfoList[bagItem.slotsIndex] = new ItemInfo();
+                Destroy(bagItem.gameObject);
+            }
+            else if (bagItem.itemInfo.name != this.itemInfo.name)
+            {//两个物品不相同时交换位置
+                int tempslotindex = slotsIndex;
+                //被换的物品信息
+                Transform beItem = transform;
+                slotsIndex = bagItem.slotsIndex;
+                //把被换的物品移动到原来拖动物品的父节点下
+                beItem.SetParent(bagPanel.slotsList[bagItem.slotsIndex].transform);
+                beItem.position = beItem.parent.position;
+                //交换两个物品的信息，拖动物品的位置在OnEndDrag函数中设置
+                bagPanel.itemInfoList[bagItem.slotsIndex] = itemInfo;
+                bagItem.slotsIndex = tempslotindex;
+                bagPanel.itemInfoList[tempslotindex] = bagItem.itemInfo;
+            }
         }
     }
 }
