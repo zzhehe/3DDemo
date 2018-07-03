@@ -269,6 +269,7 @@ public class Player : MonoBehaviour {
         anim.SetLayerWeight(anim.GetLayerIndex("AttackWalk"), curAttackWalkWeight);
         if (Input.GetMouseButtonDown(0))
         {
+            StartCoroutine(cam.GetComponent<TPFcamera>().ShakeCamera());
             anim.SetTrigger("Attack");
         }
         

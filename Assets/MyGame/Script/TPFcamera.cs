@@ -44,6 +44,8 @@ public class TPFcamera : MonoBehaviour {
     private float targetFOV;
     //custom定制摄像机最大垂直角度
     private float targetMaxVerticalAngle;
+    //有没有在抖动
+    private bool InShake;
 
     private void Start()
     {
@@ -85,6 +87,10 @@ public class TPFcamera : MonoBehaviour {
 
     private void LateUpdate()
     {
+        if (InShake)
+        {
+            return;
+        }
         //鼠标滑动的轨道
         angleH += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1) * HorizontalAimingSpeed * Time.deltaTime;
         angleV += Mathf.Clamp(Input.GetAxis("Mouse Y"), -1, 1) * verticalAimingSpeed * Time.deltaTime;
@@ -166,6 +172,7 @@ public class TPFcamera : MonoBehaviour {
         smoothPivotOffset = Vector3.Lerp(smoothPivotOffset, targetPivotOffset, smooth * Time.deltaTime);
         smoothCamOffset = Vector3.Lerp(smoothCamOffset, noCollisionOffset, smooth * Time.deltaTime);
         cam.position = player.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
+
     }
 
     public void SetTargetOffsets(Vector3 newPivotOffset, Vector3 newCamOffset)
@@ -237,4 +244,21 @@ public class TPFcamera : MonoBehaviour {
     //    return Mathf.Abs((finalPivotOffset - smoothPivotOffset).magnitude);
     //}
 
+    //摄像机抖动
+    public IEnumerator ShakeCamera(float shakeStrength = 0.2f, float rate = 1, float shakeTime = 0.2f)
+    {
+        float t = 0;
+        float speed = 1 / shakeTime;
+        Vector3 orgPosition = transform.localPosition;
+        InShake = true;
+        while (t < 1)
+        {
+            t += Time.deltaTime * speed;
+            transform.position = orgPosition + new Vector3(Random.Range(0, rate), Random.Range(0, rate), 0) * Mathf.Lerp(shakeStrength, 0, t);
+            yield return null;
+        }
+        transform.position = orgPosition;
+        InShake = false;
+    }
+    
 }
